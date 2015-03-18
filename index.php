@@ -5,26 +5,24 @@ require_once "Redis.php";
 
 class DI
 {
-    private $arrDi;
+    private $di = array();
 
-    public function set($key,$value)
+    public function __set($key,$value)
     {
-        $this->arrDi[$key] = $value;
+        $this->di[$key] = $value;
     }
 
-
-    public function get($key)
+    public function __get($key)
     {
-        return $this->arrDi[$key];
+        return $this->di[$key]($this);
     }
 }
 
 $di = new DI();
-$di->set('db',DB::getDB('localhost','root','root'));
 
-$di->set('redis',function(){
-    return new Redis();
-});
+$di->db = function(){
+    return DB::getDB('localhost','root','root');
+};
 
 class User3
 {
@@ -36,7 +34,7 @@ class User3
     }
     public function getList()
     {
-        return $this->di->get('db')->exec("create database yyy");
+        return $this->di->db->exec("create database uuuuu");
     }
 
 
